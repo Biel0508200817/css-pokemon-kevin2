@@ -3,212 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercicio 1 - Flexbox PC Box</title>
+    <title>Exercício 01 - Centralizar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/ex01.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        .font-pixel { font-family: 'Press Start 2P', cursive; }
-        .font-retro { font-family: 'VT323', monospace; }
-
-        /* Estilo da PC Box (Tela Superior) */
-        .pc-box {
-            background-color: #f0f8ff;
-            background-image: 
-                linear-gradient(#e2e8f0 1px, transparent 1px),
-                linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
-            background-size: 20px 20px;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            /* O usuário vai alterar isso via JS */
-            align-items: center; 
-            padding: 10px;
-            box-sizing: border-box;
-            transition: all 0.5s ease;
+        :root {
+            --gb-lightest: #9bbc0f;
+            --gb-light: #8bac0f;
+            --gb-dark: #306230;
+            --gb-darkest: #0f380f;
         }
 
-        .pokemon-sprite {
-            width: 40px;
-            height: 40px;
-            margin: 2px;
-            background: white;
-            border: 2px solid #4a5568;
-            border-radius: 8px;
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #2d2d2d;
+            background-image: radial-gradient(#404040 15%, transparent 16%), radial-gradient(#404040 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        /* Classes utilitárias do tema Game Boy */
+        .gb-text-dark { color: var(--gb-darkest); }
+        .gb-bg-lightest { background-color: var(--gb-lightest); }
+        .gb-border-dark { border-color: var(--gb-darkest); }
+        
+        .screen-glass {
+            box-shadow: inset 3px 3px 5px rgba(0,0,0,0.2);
+        }
+
+        /* --- O EXERCÍCIO (SOLUÇÃO) --- */
+        
+        /* O Container (A Box) */
+        .pokemon-container {
+            display: flex;
+            /* A SOLUÇÃO DO EXERCÍCIO ESTÁ AQUI: */
+            justify-content: center; 
+            
+            width: 100%;
+            height: 100px;
+            background-color: var(--gb-dark); /* Fundo escuro simulando o da imagem */
+            border: 2px solid var(--gb-darkest);
+            align-items: center; /* Centraliza verticalmente também para ficar bonito */
+        }
+
+        /* Os Itens (Pokémons) */
+        .pokemon-box {
+            width: 45px;
+            height: 45px;
+            background-color: var(--gb-lightest);
+            border: 2px solid var(--gb-darkest);
+            margin: 0 2px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-            animation: bounce 2s infinite;
+            font-size: 8px;
+            color: var(--gb-darkest);
+            text-align: center;
+            box-shadow: 2px 2px 0 var(--gb-darkest);
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+        /* Efeito de digitação no código */
+        .code-block {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 10px;
         }
 
-        .scanlines {
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-            background-size: 100% 4px;
-            pointer-events: none;
+        /* Animação suave nos botões */
+        .btn-retro {
+            transition: transform 0.1s;
         }
-
-        .ds-shell {
-            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 50%, #a0aec0 100%);
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.8), inset -2px -2px 5px rgba(0,0,0,0.2), 10px 10px 30px rgba(0,0,0,0.5);
-        }
-
-        /* Editor na tela inferior */
-        textarea {
-            resize: none;
-            outline: none;
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            line-height: 1.2;
+        .btn-retro:active {
+            transform: translateY(2px);
         }
     </style>
 </head>
-<body class="bg-gray-800 h-screen flex items-center justify-center overflow-hidden font-retro selection:bg-green-400 selection:text-black">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div id="ds-console" class="flex flex-col items-center max-w-lg w-full p-4 scale-90 sm:scale-100 transition-transform">
+    <!-- Carcaça do Gameboy (Reutilizada) -->
+    <div class="relative bg-[#c0c0c0] w-[350px] h-[600px] rounded-t-[20px] rounded-b-[40px] shadow-2xl border-r-8 border-b-8 border-[#999] flex flex-col items-center pt-8">
         
-        <!-- PARTE SUPERIOR (Visualização) -->
-        <div class="ds-shell w-full rounded-t-3xl rounded-b-lg p-6 pb-8 relative z-10">
-            <div class="bg-gray-900 p-4 rounded-lg shadow-inner border-2 border-gray-400">
-                <div class="bg-sky-200 h-48 w-full rounded border-4 border-black relative overflow-hidden flex flex-col shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]">
-                    <div class="scanlines absolute inset-0 z-20"></div>
-                    
-                    <!-- Interface da PC Box -->
-                                     <!-- Status atualizado para SUCCESS -->
-                    <div class="absolute top-2 right-2 z-10 text-xs font-pixel text-green-600 animate-pulse" id="status-msg"></div>
+        <div class="absolute top-0 w-full h-8 border-b-2 border-[#b0b0b0]"></div>
+        <div class="absolute top-2 left-4 w-24 h-2 bg-[#b0b0b0] rounded-full opacity-50"></div>
+        <div class="absolute top-2 right-4 w-24 h-2 bg-[#b0b0b0] rounded-full opacity-50"></div>
 
-                    <!-- Área Flexbox (Já com o estilo aplicado) -->
-                    <div id="pc-box-container" class="pc-box" style="justify-content: center;">
-                        <div class="pokemon-sprite" title="Bulbasaur">
+        <!-- Borda da Tela -->
+        <div class="bg-[#5c5f68] w-[280px] h-[240px] rounded-t-[10px] rounded-b-[30px] p-8 flex flex-col relative shadow-inner border-2 border-[#4a4d55]">
+            
+            <div class="flex justify-between w-full text-[8px] text-[#b3b3b3] mb-1 px-2 tracking-widest font-sans font-bold">
+                <span class="border-t border-b border-blue-800 px-2 py-0.5 text-blue-900">CSS-POKÉMON</span>
+            </div>
+
+            <!-- LED de Bateria -->
+            <div class="absolute top-[80px] left-4 flex flex-col items-center gap-1">
+                <div class="w-2 h-2 rounded-full bg-red-600 opacity-80 shadow-[0_0_5px_#ff0000]"></div>
+                <span class="text-[6px] text-[#b3b3b3] font-sans">BATTERY</span>
+            </div>
+
+            <!-- TELA LCD (Conteúdo do Exercício) -->
+            <div class="bg-[#9bbc0f] w-full h-full flex flex-col border-4 border-[#8bac0f] shadow-inner screen-glass overflow-hidden relative text-[#0f380f]">
+                
+                <!-- Cabeçalho do App -->
+                <div class="bg-[#306230] text-[#9bbc0f] p-1 flex justify-between items-center border-b-2 border-[#0f380f]">
+                    <span class="text-[8px] pl-1">Exercício 1</span>
+                    <a href="index.html" class="text-[8px] hover:bg-[#9bbc0f] hover:text-[#306230] px-1 cursor-pointer transition-colors"> MENU ↩</a>
+                </div>
+
+                <!-- Área de Conteúdo -->
+                <div class="p-2 flex flex-col h-full">
+                    
+                    <!-- Instrução -->
+                    <p class="text-[8px] mb-2 leading-tight">
+                       Centralizar na Box
+                    </p>
+
+                    <!-- Visualização (O Resultado) -->
+                    <div class="pokemon-container mb-3">
+                        <div class="pokemon-box">
                             <img src="img/ex01/pikachu.png" alt="">
                         </div>
-                        <div class="pokemon-sprite" title="Charmander">
+                        <div class="pokemon-box">
                             <img src="img/ex01/meowth.png" alt="">
                         </div>
-                        <div class="pokemon-sprite" title="Squirtle">
+                        <div class="pokemon-box">
                             <img src="img/ex01/psyduck.png" alt="">
                         </div>
                     </div>
-                </div>
-                <div class="text-center mt-1">
-                    <span class="text-gray-500 font-bold text-xs tracking-widest font-sans">NINTENDO</span>
-                </div>
-            </div>
-            
-            <!-- Alto-falantes -->
-            <div class="absolute top-1/2 left-2 transform -translate-y-1/2 space-y-1"><div class="w-1 h-1 bg-gray-500 rounded-full"></div><div class="w-1 h-1 bg-gray-500 rounded-full"></div><div class="w-1 h-1 bg-gray-500 rounded-full"></div></div>
-            <div class="absolute top-1/2 right-2 transform -translate-y-1/2 space-y-1"><div class="w-1 h-1 bg-gray-500 rounded-full"></div><div class="w-1 h-1 bg-gray-500 rounded-full"></div><div class="w-1 h-1 bg-gray-500 rounded-full"></div></div>
-        </div>
 
-        <!-- DOBRADIÇA -->
-        <div class="w-[95%] h-8 bg-gray-400 border-x-2 border-gray-500 flex justify-between items-center px-4 shadow-lg relative z-0 -my-2">
-            <div class="w-3 h-3 bg-gray-600 rounded-full shadow-inner"></div>
-            <div class="w-20 h-full bg-gray-300 border-x border-gray-500 opacity-50"></div>
-            <div class="w-3 h-3 bg-gray-600 rounded-full shadow-inner"></div>
-        </div>
-
-        <!-- PARTE INFERIOR (Editor) -->
-        <div class="ds-shell w-full rounded-b-3xl rounded-t-lg p-6 pt-8 relative z-10">
-            <div class="flex justify-between items-center">
-                
-                <!-- D-PAD -->
-                <div class="w-24 h-24 relative flex-shrink-0 mr-2 hidden sm:block">
-                    <div class="absolute top-0 left-8 w-8 h-24 bg-gray-800 rounded shadow-md border-b-4 border-gray-900"></div>
-                    <div class="absolute top-8 left-0 w-24 h-8 bg-gray-800 rounded shadow-md border-b-4 border-gray-900"></div>
-                    <div class="absolute top-9 left-9 w-6 h-6 bg-gray-700 rounded-full inset-shadow"></div>
-                    <a href="index.html" class="absolute top-8 left-0 w-8 h-8 z-20 cursor-pointer" title="Voltar ao Menu"></a>
-                </div>
-
-                <!-- Tela de Código -->
-                <div class="bg-gray-900 p-3 rounded-lg shadow-inner border-2 border-gray-400 w-full max-w-[300px] mx-auto">
-                    <div class="bg-gray-800 h-48 w-full border-4 border-gray-600 relative overflow-hidden shadow-[inset_0_0_15px_rgba(0,0,0,0.1)] flex flex-col">
+                    <!-- Explicação da Solução -->
+                    <div class="border-2 border-[#306230] p-1 bg-[#8bac0f] flex-1">
                         
-                        <!-- Header do Editor -->
-                        <div class="bg-gray-700 text-white px-2 py-1 text-xs flex justify-between items-center font-pixel">
-                            <span>Exercício 1</span>
-                            <span class="text-green-400 text-[8px]"></span>
+                        <div class="code-block text-[#0f380f] text-[9px] leading-4">
+                            
+                          
                         </div>
-
-                    
-
-                        <!-- Botão Executar -->
-                        <button onclick="runCode()" class="bg-green-600 hover:bg-green-500 text-white font-pixel text-[10px] py-2 w-full border-t border-gray-600 active:bg-green-700 transition-colors">
-                            Centralizar na Box
-                        </button>
                     </div>
-                </div>
 
-                <!-- Botões -->
-                <div class="w-24 h-24 relative flex-shrink-0 ml-2 hidden sm:block">
-                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gray-300 rounded-full border-b-4 border-gray-400 flex items-center justify-center shadow-md"><span class="text-gray-500 text-xs font-bold font-sans">X</span></div>
-                    <div class="absolute top-1/2 left-0 transform -translate-y-1/2 w-8 h-8 bg-gray-300 rounded-full border-b-4 border-gray-400 flex items-center justify-center shadow-md"><span class="text-gray-500 text-xs font-bold font-sans">Y</span></div>
-                    <div onclick="runCode()" class="cursor-pointer active:translate-y-1 active:border-b-0 absolute top-1/2 right-0 transform -translate-y-1/2 w-8 h-8 bg-gray-300 rounded-full border-b-4 border-gray-400 flex items-center justify-center shadow-md"><span class="text-gray-500 text-xs font-bold font-sans">A</span></div>
-                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gray-300 rounded-full border-b-4 border-gray-400 flex items-center justify-center shadow-md"><span class="text-gray-500 text-xs font-bold font-sans">
-                        <a href="index.html">
-                            B
-                        </a></span></div>
                 </div>
-            </div>
-
-             <div class="flex justify-center space-x-4 mt-6">
-                <div class="text-center"><div class="w-12 h-3 bg-gray-400 rounded-full border border-gray-500 transform rotate-12 shadow-inner mb-1"></div><span class="text-[8px] font-bold text-gray-500 uppercase tracking-wider font-sans">Select</span></div>
-                <div class="text-center"><div class="w-12 h-3 bg-gray-400 rounded-full border border-gray-500 transform rotate-12 shadow-inner mb-1"></div><span class="text-[8px] font-bold text-gray-500 uppercase tracking-wider font-sans">Start</span></div>
             </div>
         </div>
+
+        <!-- Logomarca -->
+        <div class="mt-2 mb-8 w-[280px] pl-2">
+            <span class="font-sans font-bold italic text-[#303080] text-lg tracking-wide opacity-80" style="text-shadow: 1px 1px 0 rgba(255,255,255,0.5);">Nintendo</span>
+            <span class="font-sans text-[#303080] text-sm ml-1 tracking-wider uppercase opacity-80">GAME BOY</span>
+        </div>
+
+        <!-- Controles (Apenas visuais aqui) -->
+        <div class="w-full px-8 flex justify-between items-start mt-4">
+            <div class="w-24 h-24 relative">
+                <div class="absolute top-0 left-8 w-8 h-24 bg-[#333] rounded shadow-md border-r border-b border-black cursor-pointer active:scale-95 btn-retro"></div>
+                <div class="absolute top-8 left-0 w-24 h-8 bg-[#333] rounded shadow-md border-r border-b border-black cursor-pointer active:scale-95 btn-retro"></div>
+                <div class="absolute top-9 left-9 w-6 h-6 bg-[#2a2a2a] rounded-full"></div>
+            </div>
+            <div class="w-32 h-24 relative mt-4 transform -rotate-12">
+                <div class="absolute top-6 right-0 bg-[#8b1d3d] w-10 h-10 rounded-full shadow-[2px_2px_0_#4a0f1f] flex items-center justify-center cursor-pointer btn-retro">
+                    <span class="text-[#c0c0c0] text-[8px] font-sans font-bold mt-10 ml-6">A</span>
+                </div>
+                <div class="absolute top-6 right-14 bg-[#8b1d3d] w-10 h-10 rounded-full shadow-[2px_2px_0_#4a0f1f] flex items-center justify-center cursor-pointer btn-retro">
+                     <span class="text-[#c0c0c0] text-[8px] font-sans font-bold mt-10 ml-6">B</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Select/Start -->
+        <div class="flex gap-4 mt-12 mb-12 transform -rotate-12 ml-4">
+            <div class="flex flex-col items-center gap-1">
+                <div class="w-12 h-3 bg-[#666] rounded-full border border-[#444] shadow-inner"></div>
+                <span class="text-[8px] text-[#666] font-sans font-bold tracking-widest uppercase">Select</span>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+                <div class="w-12 h-3 bg-[#666] rounded-full border border-[#444] shadow-inner"></div>
+                <span class="text-[8px] text-[#666] font-sans font-bold tracking-widest uppercase">Start</span>
+            </div>
+        </div>
+
+        <!-- Speaker -->
+        <div class="absolute bottom-8 right-8 flex gap-2 transform -rotate-12">
+             <div class="w-2 h-16 bg-[#a0a0a0] rounded-full shadow-inner bg-opacity-40"></div>
+             <div class="w-2 h-16 bg-[#a0a0a0] rounded-full shadow-inner bg-opacity-40"></div>
+             <div class="w-2 h-16 bg-[#a0a0a0] rounded-full shadow-inner bg-opacity-40"></div>
+             <div class="w-2 h-16 bg-[#a0a0a0] rounded-full shadow-inner bg-opacity-40"></div>
+             <div class="w-2 h-16 bg-[#a0a0a0] rounded-full shadow-inner bg-opacity-40"></div>
+             <div class="w-2 h-16 bg-[#a0a0a0] rounded-full shadow-inner bg-opacity-40"></div>
+        </div>
+
     </div>
 
-    <script>
-        function runCode() {
-            const input = document.getElementById('css-input').value.toLowerCase();
-            const box = document.getElementById('pc-box-container');
-            const status = document.getElementById('status-msg');
-
-            // Limpa estilos anteriores relevantes
-            box.style.justifyContent = '';
-
-            // Verifica se o usuário digitou algo válido relacionado a justify-content
-            if (input.includes('justify-content')) {
-                // Tenta extrair o valor (ex: 'center', 'space-between')
-                // Uma regex simples para pegar o que vem depois dos dois pontos e antes do ponto e vírgula
-                const match = input.match(/justify-content:\s*([^;]+)/);
-                
-                if (match && match[1]) {
-                    const value = match[1].trim();
-                    box.style.justifyContent = value;
-                    
-                    if (value === 'center') {
-                        status.textContent = 'SUCCESS!';
-                        status.className = 'absolute top-2 right-2 z-10 text-xs font-pixel text-green-600 animate-pulse';
-                        playSound('success');
-                    } else {
-                        status.textContent = 'APPLIED';
-                        status.className = 'absolute top-2 right-2 z-10 text-xs font-pixel text-blue-600';
-                    }
-                }
-            } else if (input.trim() !== '') {
-                status.textContent = 'SYNTAX ERROR';
-                status.className = 'absolute top-2 right-2 z-10 text-xs font-pixel text-red-600';
-            }
-        }
-
-        function playSound(type) {
-            // Placeholder para lógica de som
-            console.log("Playing sound:", type);
-        }
-
-        // Atalho: Pressionar Enter na textarea roda o código
-        document.getElementById('css-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                runCode();
-            }
-        });
-    </script>
 </body>
 </html>
